@@ -21,12 +21,19 @@ def classify_gap(gap_min: float, planned_headway_min: float, bunch_threshold: fl
     return ("normal", f"间隔接近计划 {planned_headway_min:.1f} 分钟，保持即可。")
 
 def classify_turnaround(gap_min: float, min_turnaround_min: float, vehicle_no: str) -> tuple[str, str]:
-    _ = (min_turnaround_min, vehicle_no)
-    return ("bunching", f"间隔 {gap_min:.1f} 分钟低于串车阈值，建议后车缓行或抽稀。")
+    return ("short_turnaround",
+            f"同车 {vehicle_no} 终点折返仅 {gap_min:.1f} 分钟，短于最小折返 {min_turnaround_min:.1f} 分钟，"
+            f"建议优先保证折返时间，延长折返接续，勿再催后车缓行或抽稀。")
 
 def is_short_turnaround(prev: dict, cur: dict, terminal_seq: int | None, min_turnaround_min: float | None, gap_min: float) -> bool:
-    _ = (prev, cur, terminal_seq, min_turnaround_min, gap_min)
-    return False
+    if not turnaround_should_surface(min_turnaround_min):
+        return False
+    if terminal_seq is None or prev.get("stop_seq") != terminal_seq:
+        return False
+    prev_vehicle, cur_vehicle = prev.get("vehicle_no") or "", cur.get("vehicle_no") or ""
+    if not prev_vehicle or prev_vehicle != cur_vehicle:
+        return False
+    return gap_min < min_turnaround_min
 
 def detect_bunching(arrivals: list[dict], planned_headway_min: float, bunch_threshold: float, large_threshold: float,
                     min_turnaround_min: float | None = None) -> list[GapEvent]:

@@ -21,7 +21,7 @@ async function save(r: any) {
 </script>
 <template>
   <h1>线路</h1>
-  <p class="sub">运营线路与串车 / 大间隔判定阈值 · 最小折返仅展示不参与判定</p>
+  <p class="sub">运营线路与串车 / 大间隔判定阈值 · 最小折返参与终点同车接续判定，改后重新检测即生效</p>
   <p class="muted">业务页与检测读口未强制同参与集</p>
   <div class="card">
     <table>

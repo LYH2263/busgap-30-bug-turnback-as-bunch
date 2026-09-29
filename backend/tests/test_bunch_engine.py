@@ -39,9 +39,14 @@ def test_same_vehicle_enough_turnaround_uses_headway_thresholds():
     # 折返足够（7 >= 6），同车接续仍按现网间隔阈值判定
     events = detect_bunching(_terminal_pair(7.0), 8.0, 3.0, 15.0, min_turnaround_min=6.0)
     assert events[0].status == "normal"
-    # 折返足够但间隔本身触串车阈值时，仍判串车
+    # 折返分钟够但间隔本身触串车阈值时，仍判串车
     events = detect_bunching(_terminal_pair(2.0), 8.0, 3.0, 15.0, min_turnaround_min=1.0)
     assert events[0].status == "bunching"
+
+def test_same_vehicle_exact_turnaround_boundary():
+    # 间隔恰好等于最小折返分钟（6 == 6）不算折返不足，走普通间隔分档
+    events = detect_bunching(_terminal_pair(6.0), 8.0, 3.0, 15.0, min_turnaround_min=6.0)
+    assert events[0].status != "short_turnaround"
 
 def test_different_vehicles_not_turnaround():
     events = detect_bunching(_terminal_pair(2.0, cur_vehicle="V2"), 8.0, 3.0, 15.0, min_turnaround_min=6.0)

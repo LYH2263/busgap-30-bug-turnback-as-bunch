@@ -12,7 +12,7 @@ class LineUpdate(BaseModel):
 def line_dict(r: Line) -> dict:
     return {"id": r.id, "code": r.code, "name": r.name, "planned_headway_min": r.planned_headway_min,
             "bunch_threshold": r.bunch_threshold, "large_threshold": r.large_threshold,
-            "min_turnaround_min": None}
+            "min_turnaround_min": r.min_turnaround_min}
 
 @router.get("")
 def list_lines(db: Session = Depends(get_db)):

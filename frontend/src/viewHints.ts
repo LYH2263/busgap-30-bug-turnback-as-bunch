@@ -1,6 +1,7 @@
 // scope_helpers_ready_30
 export function unifyStatusLabel(status: string): string {
-  if (status === 'short_turnaround' || status === 'deviation' || status === 'same_vehicle' || status === 'bunching_saturated') {
+  if (status === 'short_turnaround') return '折返不足'
+  if (status === 'deviation' || status === 'same_vehicle' || status === 'bunching_saturated') {
     return '串车'
   }
   if (status === 'bunching') return '串车'
