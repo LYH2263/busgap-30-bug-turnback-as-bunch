@@ -16,7 +16,7 @@ onMounted(async () => {
   await run()
 })
 function stripClass(s: string) {
-  return s === 'bunching' || s === 'short_turnaround' ? 'bg-bunch' : s === 'large_gap' ? 'bg-large' : ''
+  return s === 'bunching' ? 'bg-bunch' : s === 'short_turnaround' ? 'bg-turn' : s === 'large_gap' ? 'bg-large' : ''
 }
 function label(s: string) {
   return unifyStatusLabel(s)

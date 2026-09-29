@@ -21,8 +21,8 @@ async function save(r: any) {
 </script>
 <template>
   <h1>线路</h1>
-  <p class="sub">运营线路与串车 / 大间隔判定阈值 · 最小折返仅展示不参与判定</p>
-  <p class="muted">业务页与检测读口未强制同参与集</p>
+  <p class="sub">运营线路与串车 / 大间隔判定阈值 · 最小折返用于识别同车终点接续过短</p>
+  <p class="muted">线路页配置与检测读口同一份值，保存后重新检测即按新值判定</p>
   <div class="card">
     <table>
       <thead><tr><th>编码</th><th>名称</th><th>计划间隔(分)</th><th>串车阈值</th><th>大间隔阈值</th><th>最小折返(分)</th></tr></thead>

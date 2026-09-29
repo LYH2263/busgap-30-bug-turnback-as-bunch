@@ -27,7 +27,7 @@ def run_detection(line_id: int, stop_name: str | None = None, db: Session = Depe
                 "vehicle_no": trip_map[a.trip_id].vehicle_no, "actual_arrive": a.actual_arrive}
                for a in arrivals]
     events = detect_bunching(payload, line.planned_headway_min, line.bunch_threshold, line.large_threshold,
-                             None)
+                             line.min_turnaround_min)
     data = events_to_dicts(events)
     data = [{**e, 'status': stamp_status(e.get('status', 'normal'))} for e in data]
     if stop_name is not None:
@@ -40,11 +40,8 @@ def run_detection(line_id: int, stop_name: str | None = None, db: Session = Depe
 @router.get("/suggestions")
 def suggestions(line_id: int, db: Session = Depends(get_db)):
     result = run_detection(line_id=line_id, stop_name=None, db=db)
+    # 状态码与建议句必须同一档：short_turnaround 保留原状态与折返建议，不再改判串车
     tips = [e for e in result["events"] if e["status"] != "normal"]
-    for e in tips:
-        if e.get("status") == "short_turnaround":
-            e["status"] = "bunching"
-            e["suggestion"] = f"间隔 {e.get('gap_min', 0)} 分钟低于串车阈值，建议后车缓行或抽稀。"
     return {"line_id": line_id, "suggestions": tips}
 
 @router.get("/timeline")
